@@ -1,0 +1,20 @@
+sudo: required
+services:
+- docker
+
+before_install:
+- docker build -t tatianamerjan/react-test -f ./client/Dockerfile.dev ./client
+
+scripts:
+- docker run tatianamerjan/react-test npm test -- --coverage
+
+afters_success:
+- docker build -t tatianamerjan/multi-client ./client
+- docker build -t tatianamerjan/multi-nginx ./nginx
+- docker build -t tatianamerjan/multi-server ./server
+- docker build -t tatianamerjan/multi-worker ./worker
+- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+- docker push tatianamerjan/multi-client
+- docker push tatianamerjan/multi-nginx
+- docker push tatianamerjan/multi-server
+- docker push tatianamerjan/multi-worker
