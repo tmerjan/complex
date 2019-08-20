@@ -8,7 +8,7 @@ before_install:
 
 script:
 - docker run tatianamerjan/react-test npm run test -- --coverage
-afters_success:
+after_success:
 - docker build -t tatianamerjan/multi-client ./client
 - docker build -t tatianamerjan/multi-nginx ./nginx
 - docker build -t tatianamerjan/multi-server ./server
